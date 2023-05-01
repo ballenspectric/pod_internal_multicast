@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: udp-multicast-example
+  labels:
+    app: udp-multicast-example
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: udp-multicast-example
+  template:
+    metadata:
+      labels:
+        app: udp-multicast-example
+    spec:
+      containers:
+        - name: udp-multicast-send
+          image: udp_multicast_send:latest
+          args: ["224.1.1.1", "4242"]
+          ports:
+            - containerPort: 4242
+              protocol: UDP
+
+        - name: udp-multicast-recv
+          image: udp_multicast_recv:latest
+          args: ["224.1.1.1", "4242", "127.0.0.1"]
+          ports:
+            - containerPort: 4242
+              protocol: UDP
